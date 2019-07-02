@@ -10,6 +10,10 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class RsaUtil {
 
@@ -97,5 +101,26 @@ public class RsaUtil {
 
         }
         return str.toString();
+    }
+
+
+    public String mapToString(Map<String,String> params)
+    {
+        Map<String, String> sortedParams = new TreeMap<String, String>(params);
+        Set<Entry<String, String>> entrys = sortedParams.entrySet();
+        StringBuilder basestring = new StringBuilder();
+        for (Entry<String, String> param : entrys) {
+            if("_signature".equals(param.getKey().toLowerCase())){
+                continue;
+            }
+            basestring.append(param.getKey()).append("=").append(param.getValue()).append("&");
+        }
+        if(basestring.length()> 1){
+            basestring.deleteCharAt(basestring.length()-1);
+        }
+        //
+        String macData = basestring.toString();
+
+        return macData;
     }
 }
